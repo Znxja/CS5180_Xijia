@@ -1,0 +1,38 @@
+Problem3 
+c)
+RandomPolicy, mean = 1.7156 +- 0.0149, fraction_rejected_all = 0.3143
+ThresholdPolicy(u_min=3), mean = 3.2851 +- 0.0096, fraction_rejected_all = 0.0603
+OptimalPolicy, mean = 3.4397 +- 0.0078, fraction_rejected_all = 0.0000
+
+ThresholdPolicy(u_min=1), mean = 2.4981 +- 0.0112, fraction_rejected_all = 0.0000
+ThresholdPolicy(u_min=2), mean = 2.9904 +- 0.0084, fraction_rejected_all = 0.0047
+ThresholdPolicy(u_min=3), mean = 3.2851 +- 0.0096, fraction_rejected_all = 0.0603
+ThresholdPolicy(u_min=4), mean = 2.7492 +- 0.0185, fraction_rejected_all = 0.3127
+Best-performance threshold: 3, (mean = 3.2851 +- 0.0096)
+
+The best threshold is u_min=3, mean return of 3.29, compared to 3.44 from optimal policy. u_min of 3 cannot match optimal since it keeps the same threshold all the time, while the optimal policy adapts — picky at first but ends up settling. This adaptivity ensures optimal policy never falls back to subletting, whereas u_min=3 rejects everything around 6% of the time. That demonstrates single fixed threshold is limited: backwards induction adapts and captures the decreasing value as deadline approaches.
+
+d)
+noise_std: 0
+RandomPolicy, mean = 1.7160 +- 0.0149, fraction_rejected_all = 0.3184
+ThresholdPolicy(u_min=3), mean = 3.2851 +- 0.0096, fraction_rejected_all = 0.0603
+OptimalPolicy, mean = 3.4397 +- 0.0078, fraction_rejected_all = 0.0000
+noise_std: 0.5
+RandomPolicy, mean = 1.7440 +- 0.0149, fraction_rejected_all = 0.3064
+ThresholdPolicy(u_min=3), mean = 3.0796 +- 0.0139, fraction_rejected_all = 0.1530
+OptimalPolicy, mean = 3.3690 +- 0.0085, fraction_rejected_all = 0.0013
+noise_std: 1
+RandomPolicy, mean = 1.6983 +- 0.0148, fraction_rejected_all = 0.3163
+ThresholdPolicy(u_min=3), mean = 2.9243 +- 0.0138, fraction_rejected_all = 0.1460
+OptimalPolicy, mean = 3.2022 +- 0.0095, fraction_rejected_all = 0.0099
+noise_std: 2
+RandomPolicy, mean = 1.7113 +- 0.0149, fraction_rejected_all = 0.3146
+ThresholdPolicy(u_min=3), mean = 2.6764 +- 0.0135, fraction_rejected_all = 0.1172
+OptimalPolicy, mean = 2.8962 +- 0.0111, fraction_rejected_all = 0.0242
+
+RandomPolicy: noise_std=0 mean=1.716, noise_std=2 mean=1.711, drop=-0.005 (-0.3%)
+ThresholdPolicy(u_min=3): noise_std=0 mean=3.285, noise_std=2 mean=2.676, drop=-0.609 (-18.5%)
+OptimalPolicy: noise_std=0 mean=3.440, noise_std=2 mean=2.896, drop=-0.544 (-15.8%)
+
+ThresholdPolicy degrades fastest in percentage terms (~18%) because of the fixed threshold, while the OptimalPolicy degrades slightly less (~16%) because its time-adaptation provides protection, accepting almost everything at last week. 
+RandomPolicy is most robust, apparently its performance is nearly the same across all noise_std because it ignores the observation entirely, making decisions based solely on a pure probability. ThresholdPolicy and OptimalPolicy both degrade as noise_std increases, both of them compare the noisy signal against thresholds, probably causing them to accept low-quality apartments that look good or reject high-quality ones that look bad. As noise level increases, the observation becomes less informative and confident.
